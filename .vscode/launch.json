@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "C#: Darker.DarkKiller.BlazeUi [Default Configuration]",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\Darker.DarkKiller.BlazeUi\\Darker.DarkKiller.BlazeUi.csproj"
+        }
+    ]
+}
