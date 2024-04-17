@@ -1,11 +1,16 @@
-﻿@using Darker.DarkKiller.Models
+﻿@using Darker.DarkKiller.Constants
+@using Darker.DarkKiller.Models
 @using System.ComponentModel.DataAnnotations
 @using Darker.DarkKiller.State
+
+@attribute [Route(AppRoutes.Home)]
 
 @page "/"
 
 @inject ILogger<Home> logger;
 @inject GameState game;
+@inject NavigationManager navMan;
+
 <PageTitle>Home</PageTitle>
 
 <h1>Welcome!</h1>
@@ -30,6 +35,7 @@
     </FluentDataGrid>
 }
 
+<FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="navMan.NavigateToGame" IconEnd="@(new Icons.Regular.Size16.ArrowNext())">Continue</FluentButton>
 
 @code {
     private IQueryable<Player>? Players;

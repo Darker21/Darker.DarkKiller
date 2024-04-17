@@ -1,0 +1,19 @@
+﻿@using Darker.DarkKiller.Constants
+@using Darker.DarkKiller.State;
+
+@attribute [Route(AppRoutes.Game)]
+
+@inject GameState game
+
+<PageTitle>Killer | Inprogress</PageTitle>
+
+@if (game.Players.Count is not 0)
+{
+    <FluentDataGrid Items="@game.Players.AsQueryable()">
+        <PropertyColumn Property="@(p => p.DisplayName)" Title="Display Name" Sortable="true" />
+        <PropertyColumn Property="@(p => p.Order)" Title="Throw Order" Sortable="true" />
+    </FluentDataGrid>
+}
+
+@code {
+}
