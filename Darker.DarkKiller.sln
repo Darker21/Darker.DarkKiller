@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darker.DarkKiller.BlazeUi", "Darker.DarkKiller.BlazeUi\Darker.DarkKiller.BlazeUi.csproj", "{0B9F54E6-AB7E-44F2-B84A-3DF6E7CFE47D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Darker.DarkKiller.BlazeUi", "Darker.DarkKiller.BlazeUi\Darker.DarkKiller.BlazeUi.csproj", "{0B9F54E6-AB7E-44F2-B84A-3DF6E7CFE47D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darker.DarkKiller.Tests.E2E", "Darker.DarkKiller.Tests.E2E\Darker.DarkKiller.Tests.E2E.csproj", "{C5B5C924-3A95-4E74-957E-F6558C1F2114}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Darker.DarkKiller", "Darker.DarkKiller\Darker.DarkKiller.csproj", "{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darker.DarkKiller", "Darker.DarkKiller\Darker.DarkKiller.csproj", "{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darker.DarkKiller.Test.Client", "Darker.DarkKiller.Test.Client\Darker.DarkKiller.Test.Client.csproj", "{6467F094-1D46-4064-8393-30B9C1F49A2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{0B9F54E6-AB7E-44F2-B84A-3DF6E7CFE47D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B9F54E6-AB7E-44F2-B84A-3DF6E7CFE47D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B9F54E6-AB7E-44F2-B84A-3DF6E7CFE47D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5B5C924-3A95-4E74-957E-F6558C1F2114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5B5C924-3A95-4E74-957E-F6558C1F2114}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5B5C924-3A95-4E74-957E-F6558C1F2114}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5B5C924-3A95-4E74-957E-F6558C1F2114}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
