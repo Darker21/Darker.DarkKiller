@@ -1,7 +1,56 @@
-﻿@page "/"
+﻿@using Darker.DarkKiller.Models
+@using System.ComponentModel.DataAnnotations
+@using Darker.DarkKiller.State
 
+@page "/"
+
+@inject ILogger<Home> logger;
+@inject GameState game;
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome!</h1>
 
-Welcome to your new Fluent Blazor app.
+<FluentEditForm FormName="PlayerCreation" Model="_playerEditing" OnValidSubmit="CreatePlayer">
+    <FluentCard>
+        <DataAnnotationsValidator />
+        <h4>@(_isCreatingPlayer ? "Add a new player" : "Update player")</h4>
+        <FluentStack Orientation="Orientation.Horizontal">
+            <FluentTextField InputMode="InputMode.Text" Placeholder="Name..." @bind-Value="_playerEditing.Name"></FluentTextField>
+            <FluentButton Type="ButtonType.Submit" Title="@(_formButtonText)">@_formButtonText</FluentButton>
+        </FluentStack>
+        <FluentValidationSummary />
+    </FluentCard>
+</FluentEditForm>
+
+@if (game.Players.Count is not 0)
+{
+    <FluentDataGrid Items="@game.Players.AsQueryable()">
+        <PropertyColumn Property="@(p => p.DisplayName)" Title="Display Name" Sortable="true" />
+        <PropertyColumn Property="@(p => p.Order)" Title="Throw Order" Sortable="true" />
+    </FluentDataGrid>
+}
+
+
+@code {
+    private IQueryable<Player>? Players;
+    private EditingPlayer _playerEditing = new EditingPlayer();
+    private bool _isCreatingPlayer = true;
+    private string _formButtonText => _isCreatingPlayer ? "Add Player" : "Update Player";
+
+    private void CreatePlayer()
+    {
+        logger.LogWarning(_playerEditing.Name);
+        game.AddPlayer(new Player
+        {
+            DisplayName = _playerEditing.Name!,
+            Order = game.Players.Count + 1
+        });
+    }
+
+    private class EditingPlayer
+    {
+        [Required]
+        [MinLength(3)]
+        public string? Name { get; set; }
+    }
+}
