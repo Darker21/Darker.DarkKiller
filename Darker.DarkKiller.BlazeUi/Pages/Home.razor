@@ -19,6 +19,10 @@
         <h4>@(_isCreatingPlayer ? "Add a new player" : "Update player")</h4>
         <FluentStack Orientation="Orientation.Horizontal">
             <FluentTextField InputMode="InputMode.Text" Placeholder="Name..." @bind-Value="_playerEditing.Name"></FluentTextField>
+            @if (_isCreatingPlayer is false)
+            {
+                <FluentNumberField Placeholder="1...32" @bind-Value="_playerEditing.ThrowOrder"></FluentNumberField>
+            }
             <FluentButton Type="ButtonType.Submit" Title="@(_formButtonText)">@_formButtonText</FluentButton>
         </FluentStack>
         <FluentValidationSummary />
@@ -29,7 +33,10 @@
 {
     <FluentDataGrid Items="@game.Players.AsQueryable()">
         <PropertyColumn Property="@(p => p.DisplayName)" Title="Display Name" Sortable="true" />
-        <PropertyColumn Property="@(p => p.Order)" Title="Throw Order" Sortable="true" />
+        <PropertyColumn Property="@(p => p.Order)" Title="Throw Order" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending" />
+        <TemplateColumn Align="Align.Center" Title="Options" Sortable="false">
+            <FluentButton OnClick="() => EditPlayer(context)" aria-label="Edit player" IconEnd="@(new Icons.Regular.Size16.Edit())" />
+        </TemplateColumn>
     </FluentDataGrid>
 }
 
@@ -41,6 +48,14 @@
     private bool _isCreatingPlayer = true;
     private string _formButtonText => _isCreatingPlayer ? "Add Player" : "Update Player";
 
+    private void OnFormSubmit()
+    {
+        if (_isCreatingPlayer)
+            CreatePlayer();
+        else
+            SavePlayer();
+    }
+
     private void CreatePlayer()
     {
         logger.LogWarning(_playerEditing.Name);
@@ -51,10 +66,44 @@
         });
     }
 
+    private void SavePlayer()
+    {
+        // game.Players
+    }
+
+    private void EditPlayer(Player player)
+    {
+        logger.LogDebug(_playerEditing.Name);
+        var foundPlayer = game.Players.Find(p => player.Id == p.Id);
+        if (foundPlayer is null)
+        {
+            throw new ArgumentException($"Player was not found: {player.Id}", nameof(player.Id));
+        }
+
+        _isCreatingPlayer = false;
+        _playerEditing = new EditingPlayer(foundPlayer);
+    }
+
     private class EditingPlayer
     {
+        public Guid Id { get; set; }
+
         [Required]
         [MinLength(3)]
         public string? Name { get; set; }
+
+        [Range(1, 32)]
+        public int ThrowOrder { get; set; } = 1;
+
+        public EditingPlayer()
+        {
+
+        }
+
+        public EditingPlayer(Player player)
+        {
+            Name = player.DisplayName;
+            ThrowOrder = player.Order;
+        }
     }
 }
