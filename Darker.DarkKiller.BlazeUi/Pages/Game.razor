@@ -1,5 +1,7 @@
 ﻿@using Darker.DarkKiller.Constants
+@using Darker.DarkKiller.Models
 @using Darker.DarkKiller.State;
+@using System.ComponentModel.DataAnnotations
 
 @attribute [Route(AppRoutes.Game)]
 
@@ -8,7 +10,10 @@
 
 <PageTitle>Killer | Inprogress</PageTitle>
 
-<h1>Play</h1>
+@{
+    var roundLabel = _roundNumber > 0 ? $"Round - {_roundNumber}" : "Throw to decide your target number";
+}
+<h1>@roundLabel</h1>
 
 <FluentGrid Spacing="4" AdaptiveRendering="true" Justify="JustifyContent.FlexStart">
 
@@ -35,8 +40,39 @@
         </FluentGridItem>
 
         <FluentGridItem xs="12" md="8">
-            <FluentCard>
-                Score
+            <FluentCard AreaRestricted="false">
+                <FluentEditForm FormName="PlayerTurn" Model="@activeTurn" OnSubmit="RecordTurn">
+                    <h2>@_currentPlayer.DisplayName - To Throw</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Throw 1</th>
+                                @if ( _roundNumber > 0 )
+                                {
+                                    <th>Throw 2</th>
+                                    <th>Throw 3</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <FluentAutocomplete Id="inputThrow1" Multiple="true" MaximumSelectedOptions="1" AutoComplete="false" OnOptionsSearch="OnScoreSearch" TOption="KeyValuePair<string, int>" OptionText="kvp => kvp.Key" @bind-SelectedOptions="activeTurn.Throw1" />
+                                </td>
+                                @if ( _roundNumber > 0 )
+                                {
+                                    <td>
+                                        <FluentAutocomplete Id="inputThrow2" Multiple="true" MaximumSelectedOptions="1" AutoComplete="false" OnOptionsSearch="OnScoreSearch" TOption="KeyValuePair<string, int>" OptionText="kvp => kvp.Key" @bind-SelectedOptions="activeTurn.Throw2" />
+                                    </td>
+                                    <td>
+                                        <FluentAutocomplete Id="inputThrow3" Multiple="true" MaximumSelectedOptions="1" AutoComplete="false" OnOptionsSearch="OnScoreSearch" TOption="KeyValuePair<string, int>" OptionText="kvp => kvp.Key" @bind-SelectedOptions="activeTurn.Throw3" />
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" IconEnd="@(new Icons.Regular.Size16.Save())">Save Score</FluentButton>
+                </FluentEditForm>
             </FluentCard>
         </FluentGridItem>
     }
@@ -44,4 +80,68 @@
 </FluentGrid>
 
 @code {
+    private int _turnNumber = 0;
+
+    int TurnNumber
+    {
+        get => _turnNumber;
+        set
+        {
+            _turnNumber = value;
+            activeTurn = new()
+                {
+                    Player = _currentPlayer,
+                    Throw1 = default!,
+                    Throw2 = default!,
+                    Throw3 = default!,
+                };
+        }
+    }
+
+    private double _roundNumber => game.Players.Count > 0 ? Math.Floor((double)(_turnNumber / game.Players.Count())) : 0;
+
+    private Player _currentPlayer => game.Players[_turnNumber % game.Players.Count];
+
+    private Turn activeTurn { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        activeTurn = new Turn
+            {
+                Player = _currentPlayer,
+                Throw1 = default!,
+                Throw2 = default!,
+                Throw3 = default!,
+            };
+    }
+
+    private void RecordTurn()
+    {
+        if ( _roundNumber is 0 )
+        {
+            game.Players.Find(p => p.Id == _currentPlayer.Id)!.TargetNumber = activeTurn.Throw1.First().Value;
+        }
+        TurnNumber++;
+    }
+
+    private void OnScoreSearch(OptionsSearchEventArgs<KeyValuePair<string, int>> autocomplete)
+    {
+        autocomplete.Items = DartBoardValues.DartBoardValueDictionary.Where(kvp => kvp.Key.Contains(autocomplete.Text, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    protected class Turn
+    {
+        public Player Player { get; init; } = default!;
+
+        [Required]
+        public IEnumerable<KeyValuePair<string, int>> Throw1 { get; set; } = default!;
+
+        [Required]
+        public IEnumerable<KeyValuePair<string, int>> Throw2 { get; set; } = default!;
+
+        [Required]
+        public IEnumerable<KeyValuePair<string, int>> Throw3 { get; set; } = default!;
+    }
 }

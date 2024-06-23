@@ -1,0 +1,50 @@
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Darker.DarkKiller.Constants;
+public static class DartBoardValues
+{
+    public static Dictionary<string, int> DartBoardValueDictionary = new() {
+        { "1", 1},
+        { "Double 1", 2 },
+        { "Treble 1", 3 },
+        { "2", 2},
+        { "Double 2", 4 },
+        { "Treble 2", 6 },
+        { "3", 3 },
+        { "Double 3", 6 },
+        { "Treble 3", 9 },
+        { "4", 4 },
+        { "Double 4", 8 },
+        { "Treble 4", 12 },
+        { "5", 5 },
+        { "Double 5", 10 },
+        { "Treble 5", 15 },
+        { "6", 6 },
+        { "Double 6", 12 },
+        { "Treble 6", 18 },
+        { "7", 7 },
+        { "Double 7", 14 },
+        { "Treble 7", 21 },
+        { "8", 8 },
+        { "Double 8", 16 },
+        { "Treble 8", 24 },
+        { "9", 9 },
+        { "Double 9", 18 },
+        { "Treble 9", 27 },
+        { "10", 10 },
+        { "Double 10", 20 },
+        { "11", 11 },
+        { "12", 12 },
+        { "13", 13 },
+        { "14", 14 },
+        { "15", 15 },
+        { "16", 16 },
+        { "17", 17 },
+        { "18", 18 },
+        { "19", 19 },
+        { "20", 20 },
+        { "Outer Bull", 25 },
+        { "Bull", 50 },
+    };
+}
