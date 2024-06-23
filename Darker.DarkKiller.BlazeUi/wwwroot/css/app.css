@@ -16,15 +16,19 @@ body {
     align-items: stretch !important;
 }
 
-.body-content {
-    align-self: stretch;
-    height: unset !important;
-    display: flex;
+fluent-card {
+    margin: .5rem 0;
 }
 
 .content {
     padding: 0.5rem 1.5rem;
     align-self: stretch !important;
+}
+
+.align-items-end {
+    display: flex;
+    align-items: end;
+    flex-direction: column;
 }
 
 footer {

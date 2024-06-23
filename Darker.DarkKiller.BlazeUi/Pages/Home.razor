@@ -13,27 +13,54 @@
 
 <h1>Welcome!</h1>
 
-<FluentEditForm FormName="PlayerCreation" Model="_playerEditing" OnValidSubmit="CreatePlayer">
+<FluentEditForm FormName="PlayerCreation" Model="_playerEditing" OnValidSubmit="OnFormSubmit">
     <FluentCard>
         <DataAnnotationsValidator />
         <h4>@(_isCreatingPlayer ? "Add a new player" : "Update player")</h4>
         <FluentStack Orientation="Orientation.Horizontal">
-            <FluentTextField InputMode="InputMode.Text" Placeholder="Name..." @bind-Value="_playerEditing.Name"></FluentTextField>
+            <FluentTextField InputMode="InputMode.Text" Placeholder="Name..." @bind-Value="_playerEditing.Name" />
+            @if ( _isCreatingPlayer is false )
+            {
+                <FluentNumberField Placeholder="1...32" @bind-Value="_playerEditing.ThrowOrder" />
+            }
             <FluentButton Type="ButtonType.Submit" Title="@(_formButtonText)">@_formButtonText</FluentButton>
         </FluentStack>
         <FluentValidationSummary />
     </FluentCard>
 </FluentEditForm>
 
-@if (game.Players.Count is not 0)
+@if ( game.Players.Count is not 0 )
 {
-    <FluentDataGrid Items="@game.Players.AsQueryable()">
-        <PropertyColumn Property="@(p => p.DisplayName)" Title="Display Name" Sortable="true" />
-        <PropertyColumn Property="@(p => p.Order)" Title="Throw Order" Sortable="true" />
-    </FluentDataGrid>
+    <FluentCard>
+        <FluentDataGrid Items="@game.Players.AsQueryable()">
+            <PropertyColumn Property="@(p => p.DisplayName)" Title="Display Name" Sortable="false" />
+            <TemplateColumn Align="Align.Center" Title="Throw Order" Sortable="true" SortBy="@orderSort" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending">
+                @{
+                    var isFirst = game.Players.IndexOf(context) is 0;
+                    var isLast = game.Players.IndexOf(context) == game.Players.Count - 1;
+                }
+                <FluentGrid Spacing="1" Justify="JustifyContent.Center">
+                    <FluentGridItem>
+                        <FluentButton Disabled="isLast" OnClick="() => ShiftThrowPositionDown(context)" aria-label="Move player down" IconEnd="@(new Icons.Regular.Size16.Subtract())" />
+                    </FluentGridItem>
+                    <FluentGridItem>
+                        <FluentTextField ReadOnly="true" InputMode="InputMode.Numeric" Value="@context.Order.ToString()" />
+                    </FluentGridItem>
+                    <FluentGridItem>
+                        <FluentButton Disabled="isFirst" OnClick="() => ShiftThrowPositionUp(context)" aria-label="Move player up" IconEnd="@(new Icons.Regular.Size16.Add())" />
+                    </FluentGridItem>
+                </FluentGrid>
+            </TemplateColumn>
+            <TemplateColumn Align="Align.Center" Title="Options" Sortable="false">
+                <FluentButton OnClick="() => ChangePlayerEditing(context)" aria-label="Edit player" IconEnd="@(new Icons.Regular.Size16.Edit())" />
+                <FluentButton Appearance="Appearance.Accent" OnClick="() => game.RemovePlayer(context.Id)" aria-label="Remove player" IconEnd="@(new Icons.Regular.Size16.Delete())" />
+            </TemplateColumn>
+        </FluentDataGrid>
+    </FluentCard>
 }
-
-<FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="navMan.NavigateToGame" IconEnd="@(new Icons.Regular.Size16.ArrowNext())">Continue</FluentButton>
+<FluentCard Class="align-items-end">
+    <FluentButton Disabled="game.Players.Count is 0" Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="navMan.NavigateToGame" IconEnd="@(new Icons.Regular.Size16.ArrowNext())">Continue</FluentButton>
+</FluentCard>
 
 @code {
     private IQueryable<Player>? Players;
@@ -41,20 +68,85 @@
     private bool _isCreatingPlayer = true;
     private string _formButtonText => _isCreatingPlayer ? "Add Player" : "Update Player";
 
+    GridSort<Player> orderSort => GridSort<Player>
+        .ByAscending(p => p.Order);
+
+    private void OnFormSubmit()
+    {
+        if ( !_isCreatingPlayer )
+        {
+            game.RemovePlayer(_playerEditing.Id);
+        }
+
+        CreatePlayer();
+        ChangePlayerEditing();
+    }
+
     private void CreatePlayer()
     {
         logger.LogWarning(_playerEditing.Name);
         game.AddPlayer(new Player
+            {
+                DisplayName = _playerEditing.Name!,
+                Order = _isCreatingPlayer ? game.Players.Count + 1 : _playerEditing.ThrowOrder,
+            });
+    }
+
+    private void ChangePlayerEditing(Player? player = null)
+    {
+        if ( player is null )
         {
-            DisplayName = _playerEditing.Name!,
-            Order = game.Players.Count + 1
-        });
+            _isCreatingPlayer = true;
+            _playerEditing = new EditingPlayer();
+            return;
+        }
+
+        logger.LogDebug(_playerEditing.Name);
+        var foundPlayer = game.Players.Find(p => player.Id == p.Id);
+        if ( foundPlayer is null )
+        {
+            throw new ArgumentException($"Player was not found: {player.Id}", nameof(player.Id));
+        }
+
+        _isCreatingPlayer = false;
+        _playerEditing = new EditingPlayer(foundPlayer);
+    }
+
+    private void ShiftThrowPositionUp(Player player)
+    {
+        var originalPlayerIndex = game.Players.FindIndex(p => p.Id == player.Id);
+        var playerSwapping = game.Players[originalPlayerIndex - 1];
+        game.SwitchPlayers(player, playerSwapping);
+    }
+
+    private void ShiftThrowPositionDown(Player player)
+    {
+        var originalPlayerIndex = game.Players.FindIndex(p => p.Id == player.Id);
+        var playerSwapping = game.Players[originalPlayerIndex + 1];
+        game.SwitchPlayers(player, playerSwapping);
     }
 
     private class EditingPlayer
     {
+        public Guid Id { get; set; }
+
         [Required]
         [MinLength(3)]
         public string? Name { get; set; }
+
+        [Range(1, 32)]
+        public int ThrowOrder { get; set; } = 1;
+
+        public EditingPlayer()
+        {
+
+        }
+
+        public EditingPlayer(Player player)
+        {
+            Id = player.Id;
+            Name = player.DisplayName;
+            ThrowOrder = player.Order;
+        }
     }
 }

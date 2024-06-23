@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Darker.DarkKiller.BlazeUi",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Darker.DarkKiller", "Darker.DarkKiller\Darker.DarkKiller.csproj", "{7298FC2F-CBD4-41CB-B86A-691A4053B1D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darker.DarkKiller.Test.Client", "Darker.DarkKiller.Test.Client\Darker.DarkKiller.Test.Client.csproj", "{6467F094-1D46-4064-8393-30B9C1F49A2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Darker.DarkKiller.Test.Client", "Darker.DarkKiller.Test.Client\Darker.DarkKiller.Test.Client.csproj", "{6467F094-1D46-4064-8393-30B9C1F49A2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darker.DarkKiller.Test.BusinessLogic", "Darker.DarkKiller.Test.BusinessLogic\Darker.DarkKiller.Test.BusinessLogic.csproj", "{46C72156-78B1-4670-8B45-1608D1949121}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6467F094-1D46-4064-8393-30B9C1F49A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C72156-78B1-4670-8B45-1608D1949121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C72156-78B1-4670-8B45-1608D1949121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C72156-78B1-4670-8B45-1608D1949121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C72156-78B1-4670-8B45-1608D1949121}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
