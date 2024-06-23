@@ -19,7 +19,9 @@ namespace Darker.DarkKiller.State
 
         public void RemovePlayer(Guid playerId)
         {
-            var player = _players.Single(p => p.Id == playerId);
+            var player = _players.SingleOrDefault(p => p.Id == playerId) ?? 
+                throw new ArgumentException("Player not found", nameof(playerId));
+
             _players.Remove(player);
             NotifyStateChanged();
         }
@@ -44,16 +46,17 @@ namespace Darker.DarkKiller.State
 
         private void ReorganiseThrowOrder()
         {
-            var fixedThrowOrder = new List<Player>();
-
-            var sortedPlayers = _players.OrderBy(p => p.Order).ToList();
-            for ( var i = 0; i < sortedPlayers.Count; i++ )
+            _players.Select(p =>
             {
-                sortedPlayers[i].Order = i + 1;
-                fixedThrowOrder.Add(sortedPlayers[i]);
-            }
+                p.Order = p.Order is default(int) ? 999 : p.Order;
+                return p;
+            }).ToList()
+            .Sort((p1, p2) => p1.Order.CompareTo(p2.Order));
 
-            _players = fixedThrowOrder;
+            for ( int i = 0; i < _players.Count; i++ )
+            {
+                _players[i].Order = i + 1;
+            }
         }
     }
 }
