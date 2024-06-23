@@ -4,16 +4,44 @@
 @attribute [Route(AppRoutes.Game)]
 
 @inject GameState game
+@inject NavigationManager navMan;
 
 <PageTitle>Killer | Inprogress</PageTitle>
 
-@if (game.Players.Count is not 0)
-{
-    <FluentDataGrid Items="@game.Players.AsQueryable()">
-        <PropertyColumn Property="@(p => p.DisplayName)" Title="Display Name" Sortable="true" />
-        <PropertyColumn Property="@(p => p.Order)" Title="Throw Order" Sortable="true" />
-    </FluentDataGrid>
-}
+<h1>Play</h1>
+
+<FluentGrid Spacing="4" AdaptiveRendering="true" Justify="JustifyContent.FlexStart">
+
+    @if ( game.Players.Count is 0 )
+    {
+        <FluentGridItem xs="12" md="6" xl="4">
+            <FluentCard>
+                <p>No Players Configured</p>
+                <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Button" OnClick="navMan.NavigateToHome" IconStart="@(new Icons.Regular.Size16.ArrowStepBack())">Go Back</FluentButton>
+            </FluentCard>
+        </FluentGridItem>
+    }
+    @if ( game.Players.Count is not 0 )
+    {
+        <FluentGridItem xs="12" lg="4">
+            <FluentCard>
+                <h2>Players</h2>
+                <FluentDataGrid Items="@game.Players.AsQueryable()">
+                    <PropertyColumn Property="@(p => p.DisplayName)" Title="Name" Sortable="false" />
+                    <PropertyColumn Property="@(p => p.Lives)" Title="Lives" Sortable="false" />
+                    <PropertyColumn Property="@(p => p.TargetNumber)" Title="Target" Sortable="false" />
+                </FluentDataGrid>
+            </FluentCard>
+        </FluentGridItem>
+
+        <FluentGridItem xs="12" md="8">
+            <FluentCard>
+                Score
+            </FluentCard>
+        </FluentGridItem>
+    }
+
+</FluentGrid>
 
 @code {
 }
